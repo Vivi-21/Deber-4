@@ -1,0 +1,146 @@
+/* UTN/FICA/CITEL
+ * DEBER 4-Esclavo
+ * Yucailla Viviana
+ * 
+ */
+String recibe; //recibir
+String vector;
+String vector2;
+int tam; //sirve para almacenar el tamaño o número de vocales a codificar
+int tam2;
+int i=0; // variable de recorrido de vector
+String salida; //variable de mensaje de codificación final
+int j=0; //variable de confirmación de recpción de vocales.
+String dato;
+String dato2;
+
+#include <Wire.h>
+#include <LiquidCrystal.h>
+LiquidCrystal lcd {13,12,11,10,9,8}; // RS,E,D4,D5,D6,D7
+
+void setup() {
+  Wire.begin(4);
+  Serial.begin(9600);
+  Serial.println("Esclavo");
+  lcd.begin(16,2);
+  lcd.setCursor(1,0);
+  lcd.print("Esclavo");
+  Wire.onReceive(receiveEvent); 
+
+}
+
+void loop() {
+  delay(100);
+         
+}//end void loop
+
+void receiveEvent(){
+  while(Wire.available()>0)   {
+    char leer = Wire.read(); // Recibe la palabra del i2c tx
+    Serial.print(leer);
+    dato=leer;
+    dato.toLowerCase(); //convertimos a minusculas
+    tam=dato.length()+1;
+    char vector [tam];
+    dato.toCharArray(vector,tam);
+    for(i=0;i<tam-1;i++){
+      switch(vector[i]){
+        case 'a':
+          salida=salida+"@"; //codificacion
+          break;
+        case 'b':
+          salida=salida+"b"; //codificacion
+          break;
+        case 'c':
+          salida=salida+"c"; //codificacion
+          break;
+        case 'd':
+          salida=salida+"d"; //codificacion
+          break;
+        case 'e':
+          salida=salida+"#";//codificacion
+          break;
+        case 'f':
+          salida=salida+"f"; //codificacion
+          break;
+        case 'g':
+          salida=salida+"g"; //codificacion
+          break;
+        case 'h':
+          salida=salida+"h"; //codificacion
+          break;
+        case 'i':
+          salida=salida+"!"; //codificacion
+          break;
+        case 'j':
+          salida=salida+"j";//codificacion
+          break;
+        case 'k':
+          salida=salida+"k"; //codificacion
+          break;
+        case 'l':
+          salida=salida+"l"; //codificacion
+          break;
+        case 'm':
+          salida=salida+"m"; //codificacion
+          break;
+        case 'n':
+          salida=salida+"n";//codificacion
+          break;
+        case 'o':
+          salida=salida+"*";//codificacion
+          break;
+        case 'p':
+          salida=salida+"p";//codificacion
+          break;
+        case 'q':
+          salida=salida+"q"; //codificacion
+          break;
+        case 'r':
+          salida=salida+"r"; //codificacion
+          break;
+        case 's':
+          salida=salida+"s"; //codificacion
+          break;
+        case 't':
+          salida=salida+"t";//codificacion
+          break;
+        case 'u':
+          salida=salida+"$";//codificacion
+          break;
+        case 'v':
+          salida=salida+"v";//codificacion
+          break;
+        case 'w':
+          salida=salida+"w"; //codificacion
+          break;
+        case 'x':
+          salida=salida+"x"; //codificacion
+          break;
+        case 'y':
+          salida=salida+"y"; //codificacion
+          break;
+        case 'z':
+          salida=salida+"z";//codificacion
+          break;
+      }
+    }
+    j=0; //reinicia el contador
+    
+}
+    Serial.println("");
+    Serial.println("Ingreso Exitoso..!");
+    Serial.print(String("Codificación: ")+String(salida));//mensaje codificado
+    Serial.println("");
+    Serial.println("");
+    
+
+    Serial.print("Envio al Master");
+    delay(200);
+    Serial.println("");
+    Serial.println(String("Se envio: ")+String(salida));
+    Serial.println("");
+    lcd.setCursor(0,1);
+    lcd.print(String("dato:")+String(salida));
+    salida="";
+}
