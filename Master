@@ -1,0 +1,54 @@
+/* UTN/FICA/CITEL
+ * DEBER 4-Master
+ * Yucailla Viviana
+ * 
+ */
+#include <Wire.h>  //libreria i2c
+#include<LiquidCrystal.h> //librería LCD
+
+LiquidCrystal lcd(13,12,11,10,9,8); //RS,E,D4,D5,D6,D7
+String dato; //variable de recepción de dato string
+int tam; //tam de caracteres
+int i=0; //variable de recorrido
+String salida; //mensaje codificado
+int j=0; //variable de confirmacion de vocales
+
+void setup() {
+  Wire.begin(4);  //inicia cx i2c
+  Serial.begin(9600);  //inicia cx serial
+  Serial.println("Master");
+  lcd.begin(16,2); // inicia el LCD
+  lcd.clear(); // Limpia el LCD
+  lcd.setCursor(1,0); // Ubicación del cursor en el LCD
+  lcd.print("Master"); // impresion de mensaje
+  Wire.onReceive(receiveEvent); 
+
+}
+
+void loop() {
+    Wire.beginTransmission(4); //inicio de transmisión i2c
+    if(Serial.available()>0){ //verifica el ingreso de un caracter en la cx serial
+    dato=Serial.readString(); //lee dato
+    dato.toLowerCase(); //convertir a minusculas
+    byte tam=dato.length()+1; // tamaño de la palabra
+    char vector [tam]; //se delcara el dato char para un vector
+    dato.toCharArray(vector,tam); // arreglo del vector
+    Wire.write(vector); // escritura del vector 
+    Serial.println(""); // espacio en blanco
+    Serial.println(String("Se envio: ")+String(dato)); // impresión del mensaje
+    Serial.println("");
+    Wire.endTransmission();  // termina cx i2c
+    lcd.setCursor(0,1);  // Ubicación del cursor en el LCD
+    lcd.print("Mensaje Enviado");
+
+  }
+}
+
+void receiveEvent(){
+  while(Wire.available()>0)   { //verifica el ingreso de un caracter en la cx serial
+    char leer = Wire.read(); // Recibe la palabra del i2c tx
+    Serial.print("Mensaje recibido");
+    Serial.print(leer);
+    
+  }
+}
